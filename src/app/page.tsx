@@ -1,103 +1,164 @@
-import Image from "next/image";
+// app/page.tsx
+"use client";
 
-export default function Home() {
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+
+import PropertyCard from "@/components/PropertyCard";
+import { createClient } from "@/utils/supabase/client";
+import { useBookingStore } from "@/store/useBookingStore";
+
+const bookingSchema = z.object({
+  location: z.string().min(1, "Ubicación requerida"),
+  checkIn: z
+    .string()
+    .refine((date) => !isNaN(Date.parse(date)), "Fecha inválida"),
+  checkOut: z
+    .string()
+    .refine((date) => !isNaN(Date.parse(date)), "Fecha inválida"),
+  guests: z.number().min(1, "Al menos un huésped"),
+});
+
+type FormValues = z.infer<typeof bookingSchema>;
+
+interface Property {
+  id: string;
+  title: string;
+  price: number;
+  images: string[];
+  amenities?: string[];
+  location: string;
+}
+
+export default function HomePage() {
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const supabase = createClient();
+  const setFilters = useBookingStore((state) => state.setFilters);
+  const [properties, setProperties] = useState<Property[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<FormValues>({
+    resolver: zodResolver(bookingSchema),
+  });
+
+  const onSubmit = async (data: FormValues) => {
+    setFilters({
+      location: data.location,
+      dates: [new Date(data.checkIn), new Date(data.checkOut)],
+      guests: data.guests,
+    });
+
+    setLoading(true);
+    setError(null);
+
+    try {
+      const { data: props, error } = await supabase
+        .from("properties")
+        .select("*")
+        .ilike("location", `%${data.location}%`);
+
+      if (error) throw error;
+      setProperties(props ?? []);
+    } catch (err: any) {
+      setError(err.message || "Error al cargar propiedades");
+      setProperties([]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm/6 text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-[family-name:var(--font-geist-mono)] font-semibold">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+    <div className="min-h-screen bg-zinc-900 text-white">
+      <main className="p-4 max-w-7xl mx-auto">
+        <h1 className="text-3xl font-bold my-20 text-center text-white drop-shadow-md">
+          Reserva tu alojamiento
+        </h1>
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
+        <form
+          onSubmit={handleSubmit(onSubmit)}
+          className="bg-zinc-800/30 backdrop-blur-md rounded-2xl border border-zinc-700/50 shadow-xl p-6 max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-4 mb-8"
+        >
+          <div>
+            <input
+              {...register("location")}
+              placeholder="Ubicación"
+              className="bg-zinc-700 border-zinc-600 text-white placeholder-zinc-400 focus:border-zinc-500 focus:ring-zinc-500"
             />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
-        </div>
+            {errors.location && (
+              <p className="text-orange-600 text-sm mt-1">
+                {errors.location.message}
+              </p>
+            )}
+          </div>
+
+          <div>
+            <input type="date" {...register("checkIn")} className="input" />
+            {errors.checkIn && (
+              <p className="text-orange-600 text-sm mt-1">
+                {errors.checkIn.message}
+              </p>
+            )}
+          </div>
+
+          <div>
+            <input type="date" {...register("checkOut")} className="input" />
+            {errors.checkOut && (
+              <p className="text-orange-600 text-sm mt-1">
+                {errors.checkOut.message}
+              </p>
+            )}
+          </div>
+
+          <div>
+            <input
+              type="number"
+              {...register("guests", { valueAsNumber: true })}
+              min={1}
+              className="input"
+              placeholder="Huéspedes"
+            />
+            {errors.guests && (
+              <p className="text-orange-600 text-sm mt-1">
+                {errors.guests.message}
+              </p>
+            )}
+          </div>
+
+          <div className="md:col-span-4 flex justify-center mt-4">
+            <button
+              type="submit"
+              className="bg-emerald-500 hover:bg-emerald-600 text-white px-8 py-2 rounded-lg shadow-lg transition"
+            >
+              Buscar
+            </button>
+          </div>
+        </form>
+
+        {/* Mensajes de estado */}
+        {loading && (
+          <p className="text-center text-white/80">Cargando propiedades...</p>
+        )}
+        {error && <p className="text-center text-red-400">{error}</p>}
+        {!loading && properties.length === 0 && (
+          <p className="text-center text-white/60">
+            No se encontraron propiedades.
+          </p>
+        )}
+
+        {/* Grid responsive de propiedades */}
+        <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {properties.map((property) => (
+            <PropertyCard key={property.id} property={property} />
+          ))}
+        </section>
       </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
     </div>
   );
 }
