@@ -2,24 +2,34 @@
 
 import { useRouter } from "next/navigation";
 import { createClient } from "@/utils/supabase";
+import { Session } from "@supabase/supabase-js";
+import { useEffect, useState } from "react";
 
-export default async function DashboardPage() {
+export default function DashboardPage() {
   const router = useRouter();
   const supabase = createClient();
+  const [session, setSession] = useState<Session | null>(null);
 
-  // Redirigir si no hay sesión
-  const { data: { session } } = await supabase.auth.getSession();
-  if (!session) {
-    router.push("/inicio-de-sesion");
-    return null;
-  }
+  // Verificar sesión al montar el componente
+  useEffect(() => {
+    const checkSession = async () => {
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
+      setSession(session);
+      if (!session) {
+        router.push("/inicio-de-sesion");
+      }
+    };
+    checkSession();
+  }, []);
 
   return (
     <div className="min-h-screen bg-zinc-900 text-white p-8">
       <h1 className="text-3xl font-bold mb-8">Dashboard</h1>
       <div className="bg-zinc-800/30 backdrop-blur-md rounded-2xl border border-zinc-700/50 shadow-xl p-6">
         <h2 className="text-2xl font-semibold mb-4">
-          Bienvenido, {session.user.email}
+          Bienvenido, {session?.user?.email}
         </h2>
         <div className="space-y-6">
           <div className="p-4 border border-zinc-700/50 rounded-lg">
