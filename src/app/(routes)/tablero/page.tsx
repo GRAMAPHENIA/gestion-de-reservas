@@ -23,28 +23,34 @@ export default function DashboardPage() {
   }
 
   return (
-    <div className="min-h-screen bg-stone-50 text-stone-800 p-8">
-      <h1 className="text-3xl font-bold mb-8">Dashboard</h1>
-      <div className="bg-stone-100/70 backdrop-blur-md rounded-2xl border border-stone-200/50 shadow-xl p-6">
-        <h2 className="text-2xl font-semibold mb-4">
-          Bienvenido, {user.firstName || user.emailAddresses[0]?.emailAddress}
-        </h2>
-        <div className="space-y-6">
-          <div className="p-4 border border-stone-200 rounded-lg">
-            <h3 className="text-xl font-semibold mb-2">Mis Alojamientos</h3>
-            <p className="text-stone-600">
-              Aquí podrás gestionar tus alojamientos.
+    <div className="min-h-screen bg-stone-50 text-stone-800">
+      <div className="max-w-4xl mx-auto px-6 py-12">
+        <div className="mb-12">
+          <h1 className="text-4xl font-light text-stone-800 mb-2">Dashboard</h1>
+          <p className="text-stone-600">Bienvenido, {user.firstName || user.emailAddresses[0]?.emailAddress}</p>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div className="bg-white border border-stone-200 rounded-lg p-8">
+            <h3 className="text-xl font-semibold mb-3 text-stone-800">Mis Alojamientos</h3>
+            <p className="text-stone-600 mb-6">
+              Gestiona tus propiedades y reservas existentes.
             </p>
+            <button className="bg-stone-700 text-white px-6 py-2 rounded font-medium hover:bg-stone-800 transition-colors">
+              Ver alojamientos
+            </button>
           </div>
-          <div className="p-4 border border-stone-200 rounded-lg">
-            <h3 className="text-xl font-semibold mb-2">
+          <div className="bg-white border border-stone-200 rounded-lg p-8">
+            <h3 className="text-xl font-semibold mb-3 text-stone-800">
               Añadir Nuevo Alojamiento
             </h3>
+            <p className="text-stone-600 mb-6">
+              Publica una nueva propiedad en la plataforma.
+            </p>
             <button
-              className="bg-stone-600 hover:bg-stone-700 text-stone-50 px-4 py-2 rounded-lg"
+              className="bg-stone-700 text-white px-6 py-2 rounded font-medium hover:bg-stone-800 transition-colors"
               onClick={() => router.push("/dashboard/nuevo-alojamiento")}
             >
-              Añadir Alojamiento
+              Añadir alojamiento
             </button>
           </div>
         </div>

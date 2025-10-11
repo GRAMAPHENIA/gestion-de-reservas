@@ -12,24 +12,26 @@ interface Property {
 
 export default function PropertyCard({ property }: { property: Property }) {
   return (
-    <GlassCard>
-      <div className="overflow-hidden rounded-xl mb-4">
+    <div className="bg-white border border-stone-200 rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+      <div className="aspect-[4/3] overflow-hidden">
         <Image
           src={property.images[0]}
           alt={property.title}
           width={400}
-          height={250}
-          className="object-cover w-full h-48"
+          height={300}
+          className="object-cover w-full h-full"
         />
       </div>
-      <h3 className="text-xl font-semibold mb-2 text-stone-700">{property.title}</h3>
-      <p className="text-stone-600 mb-2">{property.location}</p>
-      <div className="flex justify-between items-center">
-        <span className="text-lg font-bold text-stone-700">${property.price}/noche</span>
-        <button className="bg-stone-600 text-stone-50 px-4 py-2 rounded-lg shadow hover:bg-stone-700 transition">
-          Reservar
-        </button>
+      <div className="p-6">
+        <h3 className="text-lg font-semibold mb-1 text-stone-800">{property.title}</h3>
+        <p className="text-stone-600 text-sm mb-4">{property.location}</p>
+        <div className="flex justify-between items-center">
+          <span className="text-xl font-bold text-stone-800">${property.price}/noche</span>
+          <button className="bg-stone-700 text-white px-4 py-2 rounded font-medium hover:bg-stone-800 transition-colors">
+            Reservar
+          </button>
+        </div>
       </div>
-    </GlassCard>
+    </div>
   );
 }

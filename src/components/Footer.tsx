@@ -2,44 +2,38 @@
 
 export default function Footer() {
   return (
-    <footer className="bg-zinc-900 text-white mt-12">
-      <div className="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+    <footer className="mt-12">
+      <div className="site-container py-12">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-gray-300">
           <div>
-            <h3 className="text-lg font-semibold mb-4">Reservas</h3>
-            <p className="text-gray-400">
+            <h3 className="text-lg font-semibold mb-4 text-white">Reservas</h3>
+            <p>
               Reserva tu alojamiento favorito con facilidad y seguridad.
             </p>
           </div>
           <div>
-            <h3 className="text-lg font-semibold mb-4">Enlaces Rápidos</h3>
+            <h3 className="text-lg font-semibold mb-4 text-white">Enlaces Rápidos</h3>
             <ul className="space-y-2">
               <li>
-                <a href="/" className="text-gray-400 hover:text-white">
-                  Inicio
-                </a>
+                <a href="/" className="text-gray-300 hover:text-white">Inicio</a>
               </li>
               <li>
-                <a href="/hoteles" className="text-gray-400 hover:text-white">
-                  Hoteles
-                </a>
+                <a href="/hoteles" className="text-gray-300 hover:text-white">Hoteles</a>
               </li>
               <li>
-                <a href="/contacto" className="text-gray-400 hover:text-white">
-                  Contacto
-                </a>
+                <a href="/contacto" className="text-gray-300 hover:text-white">Contacto</a>
               </li>
             </ul>
           </div>
           <div>
-            <h3 className="text-lg font-semibold mb-4">Contacto</h3>
-            <ul className="space-y-2">
-              <li className="text-gray-400">Email: info@reservas.com</li>
-              <li className="text-gray-400">Teléfono: (506) 123-4567</li>
+            <h3 className="text-lg font-semibold mb-4 text-white">Contacto</h3>
+            <ul className="space-y-2 text-gray-300">
+              <li>Email: info@reservas.com</li>
+              <li>Teléfono: (506) 123-4567</li>
             </ul>
           </div>
         </div>
-        <div className="mt-8 pt-8 border-t border-zinc-700 text-center text-gray-400">
+        <div className="mt-8 pt-8 border-t border-gray-800 text-center text-gray-500">
           <p>&copy; {new Date().getFullYear()} Reservas. Todos los derechos reservados.</p>
         </div>
       </div>

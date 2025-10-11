@@ -1,17 +1,19 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Inter, Poppins } from "next/font/google";
 import { ClerkProvider } from '@clerk/nextjs';
 import "./globals.css";
 import LayoutHeader from "@/components/LayoutHeader";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const inter = Inter({
+  variable: "--font-inter",
   subsets: ["latin"],
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+// Poppins para encabezados y UI (más parecido a referencia)
+const poppins = Poppins({
   subsets: ["latin"],
+  weight: ["400","600","700"],
+  variable: "--font-poppins",
 });
 
 export const metadata: Metadata = {
@@ -25,10 +27,16 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <ClerkProvider>
+    <ClerkProvider
+      // @ts-ignore
+      locale="es-ES"
+      appearance={{
+        theme: 'simple',
+      }}
+    >
       <html lang="es">
         <body
-          className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+          className={`${inter.variable} ${poppins.variable} antialiased font-inter`}
         >
           <LayoutHeader />
           {children}

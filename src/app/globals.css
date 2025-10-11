@@ -1,20 +1,132 @@
 @import "tailwindcss";
 
-:root {
-  --background: #FFFFF0; /* Blanco marfil */
-  --foreground: #483C32; /* Gris topo */
+:root{
+  --bg: #ffffff;
+  --muted: #6b7280; /* gray-500 */
+  --accent: #111827; /* gray-900 */
+  --muted-2: #f3f4f6; /* gray-100 */
+  --glass: rgba(255,255,255,0.75);
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+/* Tipografía base: usa la variable que trae next/font */
+body{
+  background: var(--bg);
+  color: var(--accent);
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
 }
 
-
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* Font variables set by next/font in layout.tsx: --font-inter and --font-poppins */
+:root{
+  --ui-font: var(--font-poppins, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial);
 }
+body{font-family:var(--ui-font)}
+
+/* Layout utilities */
+.site-container{
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+}
+
+/* Hero */
+.hero{
+  padding-top: 6.5rem; /* leave room for fixed nav */
+  padding-bottom: 4.5rem;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+.hero-inner{
+  max-width: 980px;
+  text-align:left;
+}
+.hero h2{
+  font-size:clamp(2rem,4vw,3.25rem);
+  line-height:1.02;
+  font-weight:700;
+  margin:0 0 0.75rem 0;
+}
+.hero p{
+  color:var(--muted);
+  font-size:1.05rem;
+  margin:0 0 1.25rem 0;
+}
+
+/* Testimonial / Partner cards */
+.partners-grid{
+  display:flex;
+  gap:1.25rem;
+  align-items:flex-start;
+  overflow-x:auto;
+  padding:1rem 0;
+}
+.testimonial-card{
+  min-width: 260px;
+  background: linear-gradient(180deg, rgba(250,250,250,0.9), rgba(245,245,245,0.9));
+  border:1px solid rgba(15,23,42,0.06);
+  border-radius:12px;
+  padding:1.25rem;
+  box-shadow: 0 8px 24px rgba(15,23,42,0.06);
+  position:relative;
+}
+.testimonial-card .brand{
+  font-size:0.9rem;
+  color:var(--accent);
+  font-weight:600;
+  margin-bottom:0.75rem;
+}
+.testimonial-card .quote{
+  color:var(--muted);
+  font-size:0.95rem;
+}
+
+/* small visual punch: angled corner like reference */
+.testimonial-card::before{
+  content:"";
+  position:absolute;
+  right:18px;
+  top:8px;
+  width:26px;
+  height:26px;
+  background:var(--muted-2);
+  transform:rotate(45deg);
+  border-top-right-radius:4px;
+  box-shadow: -4px -6px 0 rgba(0,0,0,0.02) inset;
+}
+
+/* Buttons */
+.btn-ghost{
+  background:transparent;
+  color:var(--accent);
+  border:1px solid transparent;
+  padding:0.5rem 0.9rem;
+  border-radius:8px;
+}
+.btn-primary{
+  background:var(--accent);
+  color:white;
+  padding:0.6rem 1rem;
+  border-radius:8px;
+}
+
+/* Transitions and focus states */
+.btn-primary, .btn-ghost, a{
+  transition: transform .18s ease, box-shadow .18s ease, color .12s ease, background-color .12s ease;
+}
+.btn-primary:hover{transform:translateY(-2px); box-shadow: 0 8px 20px rgba(17,24,39,0.12)}
+.btn-ghost:hover{color:var(--accent); transform:translateY(-1px)}
+.testimonial-card{
+  transition: transform .22s ease, box-shadow .22s ease;
+}
+.testimonial-card:hover{transform:translateY(-6px); box-shadow: 0 20px 40px rgba(15,23,42,0.12)}
+.testimonial-card:focus-within{outline:2px solid rgba(17,24,39,0.06); outline-offset:4px}
+
+/* Accessible hidden (for screen-reader labels) */
+.sr-only{position:absolute!important;height:1px;width:1px;overflow:hidden;clip:rect(1px,1px,1px,1px);white-space:nowrap}
+
+/* Footer tweaks */
+footer{background: #0b1220; color: #c7ced6}
+

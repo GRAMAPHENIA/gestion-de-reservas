@@ -9,6 +9,7 @@ import { z } from "zod";
 import PropertyCard from "@/components/PropertyCard";
 import { createClient } from "@/utils/supabase/client";
 import { useBookingStore } from "@/store/useBookingStore";
+import Testimonials from "@/components/Testimonials";
 
 const bookingSchema = z.object({
   location: z.string().min(1, "Ubicación requerida"),
@@ -75,89 +76,112 @@ export default function HomePage() {
   };
 
   return (
-    <div className="min-h-screen bg-stone-50 text-stone-700">
-      <main className="p-4 max-w-7xl mx-auto">
-        <h1 className="text-3xl font-bold my-20 text-center text-stone-700 drop-shadow-md">
-          Reserva tu alojamiento
-        </h1>
+    <div className="min-h-screen text-stone-700">
+      {/* Hero Section */}
+      <section className="relative h-[60vh] min-h-[420px] flex items-center justify-center bg-cover bg-center" style={{backgroundImage: "url('https://images.pexels.com/photos/1643383/pexels-photo-1643383.jpeg')"}}>
+        <div className="absolute inset-0 bg-black/45"></div>
+        <div className="relative z-10 text-center text-white px-6 max-w-4xl mx-auto">
+          <h1 className="text-4xl md:text-6xl lg:text-7xl font-semibold mb-4 tracking-tight leading-tight">Reserva tu alojamiento</h1>
+          <p className="text-lg md:text-2xl mb-8 text-white/90">Encuentra el lugar perfecto para tu próxima aventura</p>
+        </div>
+      </section>
 
+      {/* Search Form */}
+      <main className="px-6 py-16 max-w-7xl mx-auto -mt-32 relative z-20">
         <form
           onSubmit={handleSubmit(onSubmit)}
-          className="bg-stone-100/70 backdrop-blur-md rounded-2xl border border-stone-200/50 shadow-xl p-6 max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-4 mb-8"
+          className="bg-white border border-stone-200 shadow-lg p-8 max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-6 rounded-lg"
         >
-          <div>
+          <div className="space-y-2">
+            <label className="block text-sm font-medium text-stone-700">Ubicación</label>
             <input
               {...register("location")}
-              placeholder="Ubicación"
-              className="bg-stone-50 border-stone-300 text-stone-700 placeholder-stone-500 focus:border-stone-400 focus:ring-stone-400"
+              placeholder="¿Dónde quieres ir?"
+              className="w-full bg-white border border-stone-300 text-stone-700 placeholder-stone-400 focus:border-stone-500 focus:ring-0 px-4 py-3 rounded-md"
             />
             {errors.location && (
-              <p className="text-stone-600 text-sm mt-1">
+              <p className="text-stone-600 text-sm">
                 {errors.location.message}
               </p>
             )}
           </div>
 
-          <div>
-            <input type="date" {...register("checkIn")} className="bg-stone-50 border-stone-300 text-stone-700 focus:border-stone-400 focus:ring-stone-400" />
+          <div className="space-y-2">
+            <label className="block text-sm font-medium text-stone-700">Check-in</label>
+            <input type="date" {...register("checkIn")} className="w-full bg-white border border-stone-300 text-stone-700 focus:border-stone-500 focus:ring-0 px-4 py-3 rounded-md" />
             {errors.checkIn && (
-              <p className="text-stone-600 text-sm mt-1">
+              <p className="text-stone-600 text-sm">
                 {errors.checkIn.message}
               </p>
             )}
           </div>
 
-          <div>
-            <input type="date" {...register("checkOut")} className="bg-stone-50 border-stone-300 text-stone-700 focus:border-stone-400 focus:ring-stone-400" />
+          <div className="space-y-2">
+            <label className="block text-sm font-medium text-stone-700">Check-out</label>
+            <input type="date" {...register("checkOut")} className="w-full bg-white border border-stone-300 text-stone-700 focus:border-stone-500 focus:ring-0 px-4 py-3 rounded-md" />
             {errors.checkOut && (
-              <p className="text-stone-600 text-sm mt-1">
+              <p className="text-stone-600 text-sm">
                 {errors.checkOut.message}
               </p>
             )}
           </div>
 
-          <div>
+          <div className="space-y-2">
+            <label className="block text-sm font-medium text-stone-700">Huéspedes</label>
             <input
               type="number"
               {...register("guests", { valueAsNumber: true })}
               min={1}
-              className="bg-stone-50 border-stone-300 text-stone-700 focus:border-stone-400 focus:ring-stone-400"
-              placeholder="Huéspedes"
+              className="w-full bg-white border border-stone-300 text-stone-700 focus:border-stone-500 focus:ring-0 px-4 py-3 rounded-md"
+              placeholder="1"
             />
             {errors.guests && (
-              <p className="text-stone-600 text-sm mt-1">
+              <p className="text-stone-600 text-sm">
                 {errors.guests.message}
               </p>
             )}
           </div>
 
-          <div className="md:col-span-4 flex justify-center mt-4">
+          <div className="md:col-span-4 flex justify-center mt-6">
             <button
               type="submit"
-              className="bg-stone-600 hover:bg-stone-700 text-stone-50 px-8 py-2 rounded-lg shadow-lg transition"
+              className="bg-stone-700 hover:bg-stone-800 text-white px-8 py-3 rounded-md font-medium transition-colors"
             >
-              Buscar
+              Buscar alojamientos
             </button>
           </div>
         </form>
 
         {/* Mensajes de estado */}
         {loading && (
-          <p className="text-center text-stone-600">Cargando propiedades...</p>
+          <div className="text-center py-12">
+            <p className="text-stone-600">Cargando propiedades...</p>
+          </div>
         )}
-        {error && <p className="text-center text-red-600">{error}</p>}
+        {error && (
+          <div className="text-center py-12">
+            <p className="text-red-600">{error}</p>
+          </div>
+        )}
         {!loading && properties.length === 0 && (
-          <p className="text-center text-stone-500">
-            No se encontraron propiedades.
-          </p>
+          <div className="text-center py-12">
+            <p className="text-stone-500 text-lg">
+              No se encontraron propiedades para tu búsqueda.
+            </p>
+          </div>
         )}
 
         {/* Grid responsive de propiedades */}
-        <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mt-16">
           {properties.map((property) => (
             <PropertyCard key={property.id} property={property} />
           ))}
         </section>
+
+        {/* Testimonials / Partners */}
+        <div className="mt-20">
+          <Testimonials />
+        </div>
       </main>
     </div>
   );

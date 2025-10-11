@@ -11,7 +11,6 @@ export default function LayoutHeader() {
     <>
       <Navbar onOpen={() => setSidebarOpen(true)} />
       <Sidebar open={sidebarOpen} setOpen={setSidebarOpen} />
-      <main className="flex-grow" />
     </>
   );
 }
