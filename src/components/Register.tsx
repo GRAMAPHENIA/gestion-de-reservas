@@ -3,6 +3,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import Link from 'next/link';
 
 export default function Register() {
   const [email, setEmail] = useState("");
@@ -44,8 +45,9 @@ export default function Register() {
       }
 
       router.push("/inicio-de-sesion");
-    } catch (err: any) {
-      setError(err.message);
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : String(err);
+      setError(message);
     } finally {
       setLoading(false);
     }
@@ -107,12 +109,9 @@ export default function Register() {
         </form>
         <p className="text-center text-zinc-400 mt-4">
           ¿Ya tienes cuenta?{' '}
-          <a
-            href="/inicio-de-sesion"
-            className="text-amber-500 hover:text-amber-400"
-          >
+          <Link href="/inicio-de-sesion" className="text-amber-500 hover:text-amber-400">
             Inicia sesión
-          </a>
+          </Link>
         </p>
       </div>
     </div>

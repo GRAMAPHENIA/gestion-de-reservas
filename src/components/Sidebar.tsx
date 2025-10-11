@@ -1,4 +1,5 @@
 // components/Sidebar.tsx
+import Link from 'next/link';
 import { BsHouseDoor, BsBuilding, BsCalendar2Check, BsX } from "react-icons/bs";
 
 export default function Sidebar({
@@ -17,27 +18,27 @@ export default function Sidebar({
             <div className="h-full flex flex-col">
               <div className="flex-1 overflow-y-auto py-4 px-2">
                 <nav className="mt-4 space-y-1">
-                  <a
-                    href="/"
-                    className="group flex items-center px-2 py-2 text-sm font-medium rounded-md text-white hover:bg-emerald-600"
-                  >
-                    <BsHouseDoor className="mr-3 h-6 w-6 text-emerald-400" />
-                    Inicio
-                  </a>
-                  <a
-                    href="/hoteles"
-                    className="group flex items-center px-2 py-2 text-sm font-medium rounded-md text-gray-300 hover:bg-emerald-600 hover:text-white"
-                  >
-                    <BsBuilding className="mr-3 h-6 w-6 text-gray-400 group-hover:text-white" />
-                    Hoteles
-                  </a>
-                  <a
-                    href="/reservas"
-                    className="group flex items-center px-2 py-2 text-sm font-medium rounded-md text-gray-300 hover:bg-emerald-600 hover:text-white"
-                  >
-                    <BsCalendar2Check className="mr-3 h-6 w-6 text-gray-400 group-hover:text-white" />
-                    Reservas
-                  </a>
+                      <Link
+                        href="/"
+                        className="group flex items-center px-2 py-2 text-sm font-medium rounded-md text-white hover:bg-emerald-600"
+                      >
+                        <BsHouseDoor className="mr-3 h-6 w-6 text-emerald-400" />
+                        Inicio
+                      </Link>
+                      <Link
+                        href="/hoteles"
+                        className="group flex items-center px-2 py-2 text-sm font-medium rounded-md text-gray-300 hover:bg-emerald-600 hover:text-white"
+                      >
+                        <BsBuilding className="mr-3 h-6 w-6 text-gray-400 group-hover:text-white" />
+                        Hoteles
+                      </Link>
+                      <Link
+                        href="/reservas"
+                        className="group flex items-center px-2 py-2 text-sm font-medium rounded-md text-gray-300 hover:bg-emerald-600 hover:text-white"
+                      >
+                        <BsCalendar2Check className="mr-3 h-6 w-6 text-gray-400 group-hover:text-white" />
+                        Reservas
+                      </Link>
                 </nav>
               </div>
               <div className="flex-shrink-0 p-4 border-t border-zinc-700/50">

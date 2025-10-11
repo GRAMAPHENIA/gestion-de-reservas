@@ -25,8 +25,9 @@ export default function Login() {
       if (signInError) throw signInError;
 
       router.push("/tablero");
-    } catch (err: any) {
-      setError(err.message || "Error al iniciar sesión");
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : String(err);
+      setError(message || "Error al iniciar sesión");
     }
   };
 

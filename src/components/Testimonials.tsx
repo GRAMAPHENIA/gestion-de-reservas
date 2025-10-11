@@ -23,7 +23,7 @@ export default function Testimonials(){
         {SAMPLE.map((t, i) => (
           <GlassCard key={i}>
             <div className="brand">{t.brand}</div>
-            <div className="quote">"{t.quote}"</div>
+            <div className="quote">&quot;{t.quote}&quot;</div>
           </GlassCard>
         ))}
       </div>

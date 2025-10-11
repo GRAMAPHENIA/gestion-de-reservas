@@ -56,9 +56,10 @@ export async function POST(request: Request) {
       success: true,
       user: userData,
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : String(error);
     return NextResponse.json(
-      { error: error.message || "Error al registrar usuario" },
+      { error: message || "Error al registrar usuario" },
       { status: 500 }
     );
   }

@@ -1,5 +1,4 @@
 // components/PropertyCard.tsx
-import GlassCard from "./GlassCard";
 import Image from "next/image";
 
 interface Property {

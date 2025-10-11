@@ -9,7 +9,7 @@ export default function LayoutHeader() {
 
   return (
     <>
-      <Navbar onOpen={() => setSidebarOpen(true)} />
+      <Navbar />
       <Sidebar open={sidebarOpen} setOpen={setSidebarOpen} />
     </>
   );

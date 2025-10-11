@@ -34,7 +34,9 @@ interface Property {
 }
 
 export default function HomePage() {
-  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [_sidebarOpen, _setSidebarOpen] = useState(false);
+  // evitar warning de variables no usadas en este refactor temporal
+  void _sidebarOpen; void _setSidebarOpen;
   const supabase = createClient();
   const setFilters = useBookingStore((state) => state.setFilters);
   const [properties, setProperties] = useState<Property[]>([]);
@@ -67,8 +69,9 @@ export default function HomePage() {
 
       if (error) throw error;
       setProperties(props ?? []);
-    } catch (err: any) {
-      setError(err.message || "Error al cargar propiedades");
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : String(err);
+      setError(message || "Error al cargar propiedades");
       setProperties([]);
     } finally {
       setLoading(false);

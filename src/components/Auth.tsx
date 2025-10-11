@@ -1,8 +1,9 @@
 // components/Auth.tsx
-import { supabase } from "@/utils/supabase/client";
+import { createClient } from "@/utils/supabase/client";
 
 export const Login = () => {
   const handleGoogleLogin = async () => {
+    const supabase = createClient();
     await supabase.auth.signInWithOAuth({
       provider: "google",
     });

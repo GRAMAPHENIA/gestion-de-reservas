@@ -5,6 +5,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useRouter } from "next/navigation";
+import Link from 'next/link';
 
 const registerSchema = z.object({
   email: z.string().email("Email inválido").min(1, "Email requerido"),
@@ -49,8 +50,9 @@ export default function RegisterForm() {
 
       // Redirigir al usuario a la página de inicio de sesión
       router.push("/inicio-de-sesion");
-    } catch (err: any) {
-      setError(err.message);
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : String(err);
+      setError(message);
     } finally {
       setLoading(false);
     }
@@ -127,12 +129,9 @@ export default function RegisterForm() {
 
         <p className="text-center text-zinc-400 mt-4">
           ¿Ya tienes cuenta?{' '}
-          <a
-            href="/inicio-de-sesion"
-            className="text-amber-500 hover:text-amber-400"
-          >
+          <Link href="/inicio-de-sesion" className="text-amber-500 hover:text-amber-400">
             Inicia sesión
-          </a>
+          </Link>
         </p>
       </div>
     </div>
