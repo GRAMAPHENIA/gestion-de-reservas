@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/utils/supabase/client";
+import { createServerClient } from "@/utils/supabase/server";
 
 export async function POST(request: Request) {
   try {
@@ -26,8 +27,9 @@ export async function POST(request: Request) {
       );
     }
 
-    // 2. Luego creamos el registro en la tabla users
-    const { data: userData, error: userError } = await supabase
+    // 2. Luego creamos el registro en la tabla users usando el cliente del servidor
+    const serverSupabase = createServerClient();
+    const { data: userData, error: userError } = await serverSupabase
       .from("users")
       .insert([
         {

@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Confirma tu cuenta - Hoteles</title>
+    <style>
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background-color: #0a0a0a;
+            color: #ffffff;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 16px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            padding: 40px;
+            text-align: center;
+        }
+        .header {
+            margin-bottom: 30px;
+        }
+        .logo {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #ffffff;
+            margin-bottom: 10px;
+        }
+        .title {
+            font-size: 1.5rem;
+            color: #ffffff;
+            margin-bottom: 20px;
+        }
+        .message {
+            font-size: 1rem;
+            color: #cccccc;
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+        .button {
+            display: inline-block;
+            background-color: #3b82f6;
+            color: #ffffff;
+            text-decoration: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: bold;
+            margin: 20px 0;
+        }
+        .footer {
+            font-size: 0.875rem;
+            color: #888888;
+            margin-top: 30px;
+        }
+        .email {
+            color: #ffffff;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">Hoteles</div>
+            <h1 class="title">¡Bienvenido a Hoteles!</h1>
+        </div>
+        <div class="message">
+            <p>Hola,</p>
+            <p>Gracias por registrarte en Hoteles. Para completar tu registro y empezar a disfrutar de nuestros servicios, por favor confirma tu dirección de email haciendo clic en el botón de abajo.</p>
+            <p>Tu email: <span class="email">{{ .Email }}</span></p>
+        </div>
+        <a href="{{ .ConfirmationURL }}" class="button">Confirmar mi cuenta</a>
+        <div class="message">
+            <p>Si el botón no funciona, copia y pega este enlace en tu navegador:</p>
+            <p>{{ .ConfirmationURL }}</p>
+        </div>
+        <div class="footer">
+            <p>Si no solicitaste esta cuenta, puedes ignorar este email.</p>
+            <p>© 2024 Hoteles. Todos los derechos reservados.</p>
+        </div>
+    </div>
+</body>
+</html>

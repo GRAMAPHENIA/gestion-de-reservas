@@ -75,42 +75,42 @@ export default function HomePage() {
   };
 
   return (
-    <div className="min-h-screen bg-zinc-900 text-white">
+    <div className="min-h-screen bg-stone-50 text-stone-700">
       <main className="p-4 max-w-7xl mx-auto">
-        <h1 className="text-3xl font-bold my-20 text-center text-white drop-shadow-md">
+        <h1 className="text-3xl font-bold my-20 text-center text-stone-700 drop-shadow-md">
           Reserva tu alojamiento
         </h1>
 
         <form
           onSubmit={handleSubmit(onSubmit)}
-          className="bg-zinc-800/30 backdrop-blur-md rounded-2xl border border-zinc-700/50 shadow-xl p-6 max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-4 mb-8"
+          className="bg-stone-100/70 backdrop-blur-md rounded-2xl border border-stone-200/50 shadow-xl p-6 max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-4 mb-8"
         >
           <div>
             <input
               {...register("location")}
               placeholder="Ubicación"
-              className="bg-zinc-700 border-zinc-600 text-white placeholder-zinc-400 focus:border-zinc-500 focus:ring-zinc-500"
+              className="bg-stone-50 border-stone-300 text-stone-700 placeholder-stone-500 focus:border-stone-400 focus:ring-stone-400"
             />
             {errors.location && (
-              <p className="text-orange-600 text-sm mt-1">
+              <p className="text-stone-600 text-sm mt-1">
                 {errors.location.message}
               </p>
             )}
           </div>
 
           <div>
-            <input type="date" {...register("checkIn")} className="input" />
+            <input type="date" {...register("checkIn")} className="bg-stone-50 border-stone-300 text-stone-700 focus:border-stone-400 focus:ring-stone-400" />
             {errors.checkIn && (
-              <p className="text-orange-600 text-sm mt-1">
+              <p className="text-stone-600 text-sm mt-1">
                 {errors.checkIn.message}
               </p>
             )}
           </div>
 
           <div>
-            <input type="date" {...register("checkOut")} className="input" />
+            <input type="date" {...register("checkOut")} className="bg-stone-50 border-stone-300 text-stone-700 focus:border-stone-400 focus:ring-stone-400" />
             {errors.checkOut && (
-              <p className="text-orange-600 text-sm mt-1">
+              <p className="text-stone-600 text-sm mt-1">
                 {errors.checkOut.message}
               </p>
             )}
@@ -121,11 +121,11 @@ export default function HomePage() {
               type="number"
               {...register("guests", { valueAsNumber: true })}
               min={1}
-              className="input"
+              className="bg-stone-50 border-stone-300 text-stone-700 focus:border-stone-400 focus:ring-stone-400"
               placeholder="Huéspedes"
             />
             {errors.guests && (
-              <p className="text-orange-600 text-sm mt-1">
+              <p className="text-stone-600 text-sm mt-1">
                 {errors.guests.message}
               </p>
             )}
@@ -134,7 +134,7 @@ export default function HomePage() {
           <div className="md:col-span-4 flex justify-center mt-4">
             <button
               type="submit"
-              className="bg-emerald-500 hover:bg-emerald-600 text-white px-8 py-2 rounded-lg shadow-lg transition"
+              className="bg-stone-600 hover:bg-stone-700 text-stone-50 px-8 py-2 rounded-lg shadow-lg transition"
             >
               Buscar
             </button>
@@ -143,11 +143,11 @@ export default function HomePage() {
 
         {/* Mensajes de estado */}
         {loading && (
-          <p className="text-center text-white/80">Cargando propiedades...</p>
+          <p className="text-center text-stone-600">Cargando propiedades...</p>
         )}
-        {error && <p className="text-center text-red-400">{error}</p>}
+        {error && <p className="text-center text-red-600">{error}</p>}
         {!loading && properties.length === 0 && (
-          <p className="text-center text-white/60">
+          <p className="text-center text-stone-500">
             No se encontraron propiedades.
           </p>
         )}
