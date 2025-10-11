@@ -8,15 +8,15 @@ importers:
 
   .:
     dependencies:
+      '@clerk/localizations':
+        specifier: ^3.25.7
+        version: 3.25.7
       '@clerk/nextjs':
         specifier: ^6.33.3
         version: 6.33.3(next@15.3.1(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       '@hookform/resolvers':
         specifier: 5.0.1
         version: 5.0.1(react-hook-form@7.56.2(react@19.0.0))
-      '@supabase/auth-helpers-react':
-        specifier: 0.5.0
-        version: 0.5.0(@supabase/supabase-js@2.49.4)
       '@supabase/ssr':
         specifier: 0.6.1
         version: 0.6.1(@supabase/supabase-js@2.49.4)
@@ -92,6 +92,10 @@ packages:
     peerDependencies:
       react: ^18.0.0 || ^19.0.0 || ^19.0.0-0
       react-dom: ^18.0.0 || ^19.0.0 || ^19.0.0-0
+
+  '@clerk/localizations@3.25.7':
+    resolution: {integrity: sha512-vGS5WBS+s5OivPI6bwjctkjyrznRe4/v/AIlo0RBoyUup5nPDWmk7a0O0l4pOhRfe9e5qhZQ1+lYDGlWjUbjRQ==}
+    engines: {node: '>=18.17.0'}
 
   '@clerk/nextjs@6.33.3':
     resolution: {integrity: sha512-smlGYujMNMkbFAwziUPcPlNQqmk0K014f9EitPOUozynPc5+n27RMzTNDIQzSSpE8NSKPMz5Cf5dOn+7Dxd03Q==}
@@ -387,12 +391,6 @@ packages:
 
   '@standard-schema/utils@0.3.0':
     resolution: {integrity: sha512-e7Mew686owMaPJVNNLs55PUvgz371nKgwsc4vxE49zsODpJEnxgxRo2y/OKrqueavXgZNMDVj3DdHFlaSAeU8g==}
-
-  '@supabase/auth-helpers-react@0.5.0':
-    resolution: {integrity: sha512-5QSaV2CGuhDhd7RlQCoviVEAYsP7XnrFMReOcBazDvVmqSIyjKcDwhLhWvnrxMOq5qjOaA44MHo7wXqDiF0puQ==}
-    deprecated: This package is now deprecated - please use the @supabase/ssr package instead.
-    peerDependencies:
-      '@supabase/supabase-js': ^2.39.8
 
   '@supabase/auth-js@2.69.1':
     resolution: {integrity: sha512-FILtt5WjCNzmReeRLq5wRs3iShwmnWgBvxHfqapC/VoljJl+W8hDAyFmf1NVw3zH+ZjZ05AKxiKxVeb0HNWRMQ==}
@@ -2154,6 +2152,10 @@ snapshots:
       react-dom: 19.0.0(react@19.0.0)
       tslib: 2.8.1
 
+  '@clerk/localizations@3.25.7':
+    dependencies:
+      '@clerk/types': 4.92.0
+
   '@clerk/nextjs@6.33.3(next@15.3.1(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(react-dom@19.0.0(react@19.0.0))(react@19.0.0)':
     dependencies:
       '@clerk/backend': 2.17.2(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
@@ -2411,10 +2413,6 @@ snapshots:
   '@stablelib/base64@1.0.1': {}
 
   '@standard-schema/utils@0.3.0': {}
-
-  '@supabase/auth-helpers-react@0.5.0(@supabase/supabase-js@2.49.4)':
-    dependencies:
-      '@supabase/supabase-js': 2.49.4
 
   '@supabase/auth-js@2.69.1':
     dependencies:
