@@ -1,11 +1,12 @@
 "use client";
 
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { propertySchema, PropertyFormValues } from "@/schemas/propertySchema";
+import { propertyFormSchema, PropertyFormValues } from "@/schemas/propertySchema";
 import { useUser } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import ImageUploader from "@/components/ImageUploader";
 
 export default function NewPropertyPage() {
   const { user, isLoaded } = useUser();
@@ -15,10 +16,17 @@ export default function NewPropertyPage() {
   const {
     register,
     handleSubmit,
+    control,
     formState: { errors },
   } = useForm<PropertyFormValues>({
-    resolver: zodResolver(propertySchema),
-    defaultValues: { images: [""] as unknown as string[] },
+    resolver: zodResolver(propertyFormSchema),
+    defaultValues: {
+      images: [],
+      title: "",
+      description: "",
+      price: 0,
+      location: ""
+    },
   });
 
   if (isLoaded && !user) {
@@ -26,10 +34,15 @@ export default function NewPropertyPage() {
     return null;
   }
 
-  const onSubmit = async (data: PropertyFormValues) => {
+  const onSubmit = async (data: PropertyFormValues, shouldPublish = false) => {
     setLoading(true);
     try {
-      const payload = { ...data, owner_id: user!.id };
+      const payload = { 
+        ...data, 
+        owner_id: user!.id,
+        status: shouldPublish ? 'published' : 'draft'
+      };
+      
       const res = await fetch("/api/dashboard/properties", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -38,10 +51,13 @@ export default function NewPropertyPage() {
 
       const json = await res.json();
       if (!res.ok) throw new Error(json.error || 'Error creando propiedad');
+      
+      const action = shouldPublish ? 'publicado' : 'guardado como borrador';
+      alert(`¡Alojamiento ${action} exitosamente!`);
       router.push('/tablero');
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : String(err);
-      alert(message || 'Error');
+      alert(message || 'Error al crear alojamiento');
     } finally {
       setLoading(false);
     }
@@ -49,51 +65,98 @@ export default function NewPropertyPage() {
 
   return (
     <div className="min-h-screen bg-stone-50 text-stone-800 py-12">
-      <div className="max-w-3xl mx-auto bg-white border border-stone-200 rounded-lg p-8">
+      <div className="max-w-3xl mx-auto bg-white border border-stone-200 rounded-lg p-8 mt-14">
         <h1 className="text-2xl font-semibold mb-4">Añadir nuevo alojamiento</h1>
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+        <form className="space-y-4">
           <div>
             <label className="block text-sm font-medium text-stone-700">Título</label>
-            <input className="mt-1 block w-full border rounded px-3 py-2" {...register('title')} />
+            <input 
+              className="mt-1 block w-full border border-stone-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-stone-500" 
+              {...register('title')} 
+              placeholder="Ej: Casa frente al mar"
+            />
             {errors.title && <p className="text-red-600 text-sm">{errors.title.message}</p>}
           </div>
 
           <div>
             <label className="block text-sm font-medium text-stone-700">Descripción</label>
-            <textarea className="mt-1 block w-full border rounded px-3 py-2" {...register('description')} />
+            <textarea 
+              className="mt-1 block w-full border border-stone-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-stone-500" 
+              {...register('description')} 
+              rows={4}
+              placeholder="Describe tu alojamiento..."
+            />
             {errors.description && <p className="text-red-600 text-sm">{errors.description.message}</p>}
           </div>
 
           <div>
             <label className="block text-sm font-medium text-stone-700">Precio por noche (USD)</label>
-            <input type="number" step="0.01" className="mt-1 block w-full border rounded px-3 py-2" {...register('price', { valueAsNumber: true })} />
+            <input 
+              type="number" 
+              step="0.01" 
+              min="0"
+              className="mt-1 block w-full border border-stone-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-stone-500" 
+              {...register('price', { valueAsNumber: true })} 
+              placeholder="100"
+            />
             {errors.price && <p className="text-red-600 text-sm">{errors.price.message}</p>}
           </div>
 
           <div>
             <label className="block text-sm font-medium text-stone-700">Ubicación</label>
-            <input className="mt-1 block w-full border rounded px-3 py-2" {...register('location')} />
+            <input 
+              className="mt-1 block w-full border border-stone-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-stone-500" 
+              {...register('location')} 
+              placeholder="Ej: Cancún, México"
+            />
             {errors.location && <p className="text-red-600 text-sm">{errors.location.message}</p>}
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-stone-700">Imágenes (URLs, separadas por coma)</label>
-            <input
-              className="mt-1 block w-full border rounded px-3 py-2"
-              {...register('images', {
-                setValueAs: (v) => (typeof v === 'string' ? v.split(',').map(s => s.trim()).filter(Boolean) : v),
-              })}
+            <Controller
+              name="images"
+              control={control}
+              render={({ field }) => (
+                <ImageUploader
+                  images={field.value || []}
+                  onChange={field.onChange}
+                  maxImages={5}
+                />
+              )}
             />
             {errors.images && (
-              <p className="text-red-600 text-sm">{((errors.images as unknown) as { message?: string })?.message ?? String(errors.images)}</p>
+              <p className="text-red-600 text-sm mt-2">{errors.images.message}</p>
             )}
           </div>
 
-          <div className="flex items-center gap-3">
-            <button type="submit" disabled={loading} className="bg-stone-700 text-white px-4 py-2 rounded">
-              {loading ? 'Guardando...' : 'Publicar alojamiento'}
+          <div className="flex items-center gap-3 pt-4">
+            <button 
+              type="button"
+              disabled={loading} 
+              className="bg-gray-600 text-white px-6 py-3 rounded-md hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors font-medium"
+              onClick={(e) => {
+                e.preventDefault();
+                handleSubmit((data) => onSubmit(data, false))();
+              }}
+            >
+              {loading ? 'Guardando...' : 'Guardar borrador'}
             </button>
-            <button type="button" onClick={() => router.back()} className="text-stone-700 px-3 py-2">
+            <button 
+              type="button"
+              disabled={loading} 
+              className="bg-green-600 text-white px-6 py-3 rounded-md hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors font-medium"
+              onClick={(e) => {
+                e.preventDefault();
+                handleSubmit((data) => onSubmit(data, true))();
+              }}
+            >
+              {loading ? 'Publicando...' : 'Publicar alojamiento'}
+            </button>
+            <button 
+              type="button" 
+              onClick={() => router.back()} 
+              className="text-stone-700 px-4 py-3 hover:bg-stone-100 rounded-md transition-colors"
+            >
               Cancelar
             </button>
           </div>

@@ -12,6 +12,8 @@ type Property = {
   price: number;
   location: string;
   images: string[];
+  status: 'draft' | 'published';
+  owner_id: string;
 };
 
 export default function DashboardClient() {
@@ -60,6 +62,16 @@ export default function DashboardClient() {
     }
   };
 
+  const handleStatusChange = (propertyId: string, newStatus: 'draft' | 'published') => {
+    setProperties(prev => 
+      prev.map(prop => 
+        prop.id === propertyId 
+          ? { ...prop, status: newStatus }
+          : prop
+      )
+    );
+  };
+
   if (!isLoaded) {
     return <div className="min-h-screen bg-stone-50 text-stone-800 p-8">Cargando...</div>;
   }
@@ -77,7 +89,7 @@ export default function DashboardClient() {
           <div>
             <button
               className="bg-stone-700 text-white px-6 py-2 rounded font-medium hover:bg-stone-800 transition-colors"
-              onClick={() => router.push('/tablero/nuevo-alojamiento')}
+              onClick={() => router.push('/tablero/dashboard/nuevo-alojamiento')}
             >
               Añadir alojamiento
             </button>
@@ -85,24 +97,69 @@ export default function DashboardClient() {
         </div>
 
         {loading ? (
-            <div>Cargando alojamientos...</div>
-          ) : properties.length === 0 ? (
-            <div className="bg-white border border-stone-200 rounded-lg p-6">No hay alojamientos publicados aún.</div>
-          ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {properties.map((p) => (
-                <div key={p.id} className="relative">
-                  <PropertyCard property={p} />
-                  <div className="absolute top-3 right-3 flex gap-2">
+          <div className="text-center py-12">
+            <p className="text-stone-600">Cargando alojamientos...</p>
+          </div>
+        ) : properties.length === 0 ? (
+          <div className="text-center py-12">
+            <div className="bg-white rounded-lg border border-stone-200 p-8">
+              <h3 className="text-xl font-medium text-stone-800 mb-2">
+                No tienes alojamientos aún
+              </h3>
+              <p className="text-stone-600 mb-6">
+                Comienza agregando tu primer alojamiento para empezar a recibir reservas
+              </p>
+              <button
+                onClick={() => router.push('/tablero/dashboard/nuevo-alojamiento')}
+                className="inline-block bg-stone-700 text-white px-6 py-3 rounded-md hover:bg-stone-800 transition-colors font-medium"
+              >
+                Agregar mi primer alojamiento
+              </button>
+            </div>
+          </div>
+        ) : (
+          <>
+            {/* Estadísticas rápidas */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+              <div className="bg-white p-6 rounded-lg border border-stone-200">
+                <h3 className="text-sm font-medium text-stone-600">Total</h3>
+                <p className="text-2xl font-bold text-stone-800">{properties.length}</p>
+              </div>
+              <div className="bg-white p-6 rounded-lg border border-stone-200">
+                <h3 className="text-sm font-medium text-stone-600">Publicados</h3>
+                <p className="text-2xl font-bold text-green-600">
+                  {properties.filter(p => p.status === 'published').length}
+                </p>
+              </div>
+              <div className="bg-white p-6 rounded-lg border border-stone-200">
+                <h3 className="text-sm font-medium text-stone-600">Borradores</h3>
+                <p className="text-2xl font-bold text-gray-600">
+                  {properties.filter(p => p.status === 'draft').length}
+                </p>
+              </div>
+            </div>
+
+            {/* Grid de propiedades */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {properties.map((property) => (
+                <div key={property.id} className="relative">
+                  <PropertyCard
+                    property={property}
+                    onStatusChange={handleStatusChange}
+                  />
+                  <div className="absolute top-3 right-3">
                     <button
-                      className="bg-white border border-stone-200 text-red-600 px-3 py-1 rounded text-sm"
-                      onClick={() => handleDelete(p.id)}
-                    >Eliminar</button>
+                      className="bg-white border border-stone-200 text-red-600 px-3 py-1 rounded text-sm hover:bg-red-50 transition-colors"
+                      onClick={() => handleDelete(property.id)}
+                    >
+                      Eliminar
+                    </button>
                   </div>
                 </div>
               ))}
             </div>
-          )}
+          </>
+        )}
 
       </div>
     </div>

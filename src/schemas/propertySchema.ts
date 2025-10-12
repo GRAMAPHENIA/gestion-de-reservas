@@ -18,6 +18,8 @@ export const propertySchema = z.object({
   images: z.array(z.string()).min(1, "Se requiere al menos una imagen"),
   // owner_id puede ser un UUID o un string de proveedor externo (p.ej. Clerk -> "user_xxx")
   owner_id: z.string(),
+  // Estado de la propiedad: 'draft' o 'published'
+  status: z.enum(['draft', 'published']).default('draft'),
 });
 
 export type PropertyFormValues = z.infer<typeof propertyFormSchema>;

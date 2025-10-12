@@ -31,6 +31,8 @@ interface Property {
   images: string[];
   amenities?: string[];
   location: string;
+  status?: 'draft' | 'published';
+  owner_id: string;
 }
 
 export default function HomePage() {
@@ -52,21 +54,33 @@ export default function HomePage() {
     resolver: zodResolver(bookingSchema),
   });
 
-  // Cargar todas las propiedades al inicio
+  // Cargar solo propiedades publicadas al inicio
   useEffect(() => {
-    const loadAllProperties = async () => {
+    const loadPublishedProperties = async () => {
       setLoading(true);
       setError(null);
       
       try {
-        const { data: props, error } = await supabase
-          .from("properties")
-          .select("*")
-          .order("created_at", { ascending: false });
+        console.log('Haciendo fetch a:', '/api/dashboard/properties');
+        console.log('URL base:', window.location.origin);
+        
+        // Usar la API que filtra solo propiedades publicadas
+        const response = await fetch('/api/dashboard/properties');
+        
+        console.log('Response status:', response.status);
+        console.log('Response ok:', response.ok);
+        
+        if (!response.ok) {
+          const errorText = await response.text();
+          console.error('Error response:', errorText);
+          throw new Error(`Error ${response.status}: ${errorText}`);
+        }
 
-        if (error) throw error;
-        setProperties(props ?? []);
+        const data = await response.json();
+        console.log('Data recibida:', data);
+        setProperties(data.properties || []);
       } catch (err: unknown) {
+        console.error('Error en loadPublishedProperties:', err);
         const message = err instanceof Error ? err.message : String(err);
         setError(message || "Error al cargar propiedades");
         setProperties([]);
@@ -76,8 +90,8 @@ export default function HomePage() {
       }
     };
 
-    loadAllProperties();
-  }, [supabase]);
+    loadPublishedProperties();
+  }, []);
 
   const onSubmit = async (data: FormValues) => {
     setFilters({
@@ -90,9 +104,11 @@ export default function HomePage() {
     setError(null);
 
     try {
+      // Buscar solo en propiedades publicadas
       const { data: props, error } = await supabase
         .from("properties")
         .select("*")
+        .eq("status", "published")
         .ilike("location", `%${data.location}%`);
 
       if (error) throw error;
