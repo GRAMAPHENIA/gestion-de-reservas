@@ -2,6 +2,7 @@
 
 import { useState, useRef } from "react";
 import { FiUpload, FiX, FiImage } from "react-icons/fi";
+import Image from "next/image";
 
 interface ImageUploaderProps {
   images: string[];
@@ -104,11 +105,12 @@ export default function ImageUploader({ images, onChange, maxImages = 5 }: Image
       <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
         {images.map((image, index) => (
           <div key={index} className="relative group">
-            <div className="aspect-square bg-stone-100 rounded-lg overflow-hidden border border-stone-200">
-              <img
+            <div className="aspect-square bg-stone-100 rounded-lg overflow-hidden border border-stone-200 relative">
+              <Image
                 src={image}
                 alt={`Imagen ${index + 1}`}
-                className="w-full h-full object-cover"
+                fill
+                className="object-cover"
               />
             </div>
             <button

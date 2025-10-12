@@ -8,6 +8,7 @@ interface BookingData {
   user_id: string;
   check_in: string;
   check_out: string;
+  [key: string]: unknown;
 }
 
 export const bookProperty = async (bookingData: BookingData) => {

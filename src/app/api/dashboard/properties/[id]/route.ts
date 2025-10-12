@@ -3,9 +3,10 @@ import { createServerClient } from '@/utils/supabase/server';
 
 export async function PATCH(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params;
     const body = await request.json();
     const { status } = body;
 
@@ -21,7 +22,7 @@ export async function PATCH(
     const { data, error } = await supabase
       .from('properties')
       .update({ status })
-      .eq('id', params.id)
+      .eq('id', id)
       .select()
       .single();
 
@@ -39,15 +40,16 @@ export async function PATCH(
 
 export async function DELETE(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params;
     const supabase = createServerClient();
     
     const { error } = await supabase
       .from('properties')
       .delete()
-      .eq('id', params.id);
+      .eq('id', id);
 
     if (error) {
       console.log('Error de Supabase:', error);

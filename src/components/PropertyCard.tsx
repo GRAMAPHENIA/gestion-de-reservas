@@ -59,12 +59,13 @@ export default function PropertyCard({ property, onStatusChange }: PropertyCardP
   const handleUnpublish = () => handleStatusChange('draft');
   return (
     <div className="bg-white border border-stone-200 rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow">
-      <div className="aspect-[4/3] overflow-hidden">
+      <div className="aspect-[4/3] overflow-hidden relative">
         {property.images[0]?.startsWith('data:') ? (
-          <img
+          <Image
             src={property.images[0]}
             alt={property.title}
-            className="object-cover w-full h-full"
+            fill
+            className="object-cover"
           />
         ) : (
           <Image

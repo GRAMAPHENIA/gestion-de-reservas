@@ -1,5 +1,4 @@
-import { NextResponse } from 'next/server';
-import { clerkMiddleware, getAuth } from '@clerk/nextjs/server';
+import { clerkMiddleware } from '@clerk/nextjs/server';
 
 // Use clerkMiddleware so server-side auth() works in server components.
 export default clerkMiddleware({

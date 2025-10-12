@@ -112,7 +112,7 @@ export default function HomePage() {
         .ilike("location", `%${data.location}%`);
 
       if (error) throw error;
-      setProperties(props ?? []);
+      setProperties((props as unknown as Property[]) ?? []);
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : String(err);
       setError(message || "Error al cargar propiedades");
