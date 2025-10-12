@@ -15,6 +15,9 @@ export default function Navbar() {
             <Link href="/" className="text-sm text-gray-600 hover:text-gray-900">Inicio</Link>
             <Link href="/hoteles" className="text-sm text-gray-600 hover:text-gray-900">Hoteles</Link>
             <Link href="/reservas" className="text-sm text-gray-600 hover:text-gray-900">Reservas</Link>
+            <SignedIn>
+              <Link href="/tablero" className="text-sm text-gray-600 hover:text-gray-900">Dashboard</Link>
+            </SignedIn>
           </div>
         </div>
 
@@ -52,6 +55,9 @@ export default function Navbar() {
           <Link href="/" className="block text-gray-700 py-2">Inicio</Link>
           <Link href="/hoteles" className="block text-gray-700 py-2">Hoteles</Link>
           <Link href="/reservas" className="block text-gray-700 py-2">Reservas</Link>
+          <SignedIn>
+            <Link href="/tablero" className="block text-gray-700 py-2">Dashboard</Link>
+          </SignedIn>
           <SignedOut>
             <Link href="/inicio-de-sesion" className="block text-gray-700 py-2">Iniciar sesión</Link>
             <Link href="/registro" className="block text-gray-700 py-2">Crear cuenta</Link>

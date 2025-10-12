@@ -5,13 +5,19 @@ import { propertySchema } from '@/schemas/propertySchema';
 export async function POST(request: Request) {
   try {
     const body = await request.json();
+    console.log('API recibió body:', body);
 
     const parse = propertySchema.safeParse(body);
     if (!parse.success) {
+      console.log('Error de validación:', parse.error.flatten());
       return NextResponse.json({ error: parse.error.flatten() }, { status: 400 });
     }
+    
+    console.log('Datos validados correctamente:', parse.data);
 
     const supabase = createServerClient();
+    console.log('Intentando insertar en Supabase...');
+    
     const { data, error } = await supabase
       .from('properties')
       .insert({
@@ -27,8 +33,11 @@ export async function POST(request: Request) {
       .single();
 
     if (error) {
+      console.log('Error de Supabase:', error);
       return NextResponse.json({ error: error.message }, { status: 500 });
     }
+    
+    console.log('Propiedad creada exitosamente:', data);
 
     return NextResponse.json({ success: true, property: data });
   } catch (err: unknown) {

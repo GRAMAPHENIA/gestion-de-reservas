@@ -1,13 +1,13 @@
 // app/page.tsx
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 
 import PropertyCard from "@/components/PropertyCard";
-import { createClient } from "@/utils/supabase/client";
+import { useSupabase } from "@/hooks/useSupabase";
 import { useBookingStore } from "@/store/useBookingStore";
 import Testimonials from "@/components/Testimonials";
 
@@ -37,11 +37,12 @@ export default function HomePage() {
   const [_sidebarOpen, _setSidebarOpen] = useState(false);
   // evitar warning de variables no usadas en este refactor temporal
   void _sidebarOpen; void _setSidebarOpen;
-  const supabase = createClient();
+  const supabase = useSupabase();
   const setFilters = useBookingStore((state) => state.setFilters);
   const [properties, setProperties] = useState<Property[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [initialLoad, setInitialLoad] = useState(true);
 
   const {
     register,
@@ -50,6 +51,33 @@ export default function HomePage() {
   } = useForm<FormValues>({
     resolver: zodResolver(bookingSchema),
   });
+
+  // Cargar todas las propiedades al inicio
+  useEffect(() => {
+    const loadAllProperties = async () => {
+      setLoading(true);
+      setError(null);
+      
+      try {
+        const { data: props, error } = await supabase
+          .from("properties")
+          .select("*")
+          .order("created_at", { ascending: false });
+
+        if (error) throw error;
+        setProperties(props ?? []);
+      } catch (err: unknown) {
+        const message = err instanceof Error ? err.message : String(err);
+        setError(message || "Error al cargar propiedades");
+        setProperties([]);
+      } finally {
+        setLoading(false);
+        setInitialLoad(false);
+      }
+    };
+
+    loadAllProperties();
+  }, [supabase]);
 
   const onSubmit = async (data: FormValues) => {
     setFilters({
@@ -166,20 +194,32 @@ export default function HomePage() {
             <p className="text-red-600">{error}</p>
           </div>
         )}
-        {!loading && properties.length === 0 && (
+        {!loading && properties.length === 0 && !initialLoad && (
           <div className="text-center py-12">
             <p className="text-stone-500 text-lg">
-              No se encontraron propiedades para tu búsqueda.
+              {error ? "Error al cargar propiedades" : "No se encontraron propiedades."}
             </p>
           </div>
         )}
 
         {/* Grid responsive de propiedades */}
-        <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mt-16">
-          {properties.map((property) => (
-            <PropertyCard key={property.id} property={property} />
-          ))}
-        </section>
+        {properties.length > 0 && (
+          <section className="mt-16">
+            <div className="text-center mb-8">
+              <h2 className="text-2xl md:text-3xl font-semibold text-stone-800 mb-2">
+                {initialLoad ? "Cargando..." : "Alojamientos disponibles"}
+              </h2>
+              <p className="text-stone-600">
+                Descubre lugares únicos para tu próxima aventura
+              </p>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {properties.map((property) => (
+                <PropertyCard key={property.id} property={property} />
+              ))}
+            </div>
+          </section>
+        )}
 
         {/* Testimonials / Partners */}
         <div className="mt-20">

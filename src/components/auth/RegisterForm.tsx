@@ -42,7 +42,7 @@ export default function RegisterForm() {
         body: JSON.stringify(data),
       });
 
-      const result = await response.json();
+      const result = await response.json() as { error?: string };
 
       if (!response.ok) {
         throw new Error(result.error || "Error al registrarse");

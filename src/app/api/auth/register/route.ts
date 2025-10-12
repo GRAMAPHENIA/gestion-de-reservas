@@ -45,7 +45,7 @@ export async function POST(request: Request) {
 
     if (userError) {
       // Si hay error al crear el usuario en la tabla users, borramos el usuario de Auth
-      await supabase.auth.admin.deleteUser(authData.user.id);
+      await serverSupabase.auth.admin.deleteUser(authData.user.id);
       return NextResponse.json(
         { error: userError.message },
         { status: 400 }

@@ -6,6 +6,8 @@ export default function AuthPage() {
       {/* Left side - Registration */}
       <div className="flex-1 flex items-center justify-center p-12">
         <SignUp
+          forceRedirectUrl="/tablero"
+          signInUrl="/inicio-de-sesion"
           appearance={{
             elements: {
               "cl-footerAction": {

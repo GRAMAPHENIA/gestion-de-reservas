@@ -13,13 +13,21 @@ export default function PropertyCard({ property }: { property: Property }) {
   return (
     <div className="bg-white border border-stone-200 rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow">
       <div className="aspect-[4/3] overflow-hidden">
-        <Image
-          src={property.images[0]}
-          alt={property.title}
-          width={400}
-          height={300}
-          className="object-cover w-full h-full"
-        />
+        {property.images[0]?.startsWith('data:') ? (
+          <img
+            src={property.images[0]}
+            alt={property.title}
+            className="object-cover w-full h-full"
+          />
+        ) : (
+          <Image
+            src={property.images[0] || '/placeholder-image.jpg'}
+            alt={property.title}
+            width={400}
+            height={300}
+            className="object-cover w-full h-full"
+          />
+        )}
       </div>
       <div className="p-6">
         <h3 className="text-lg font-semibold mb-1 text-stone-800">{property.title}</h3>

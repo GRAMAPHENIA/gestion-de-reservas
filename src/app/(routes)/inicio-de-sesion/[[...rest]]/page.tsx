@@ -6,6 +6,8 @@ export default function LoginPage() {
       {/* Left side - Login */}
       <div className="flex-1 flex items-center justify-center p-12">
         <SignIn
+          forceRedirectUrl="/tablero"
+          signUpUrl="/registro"
           appearance={{
             elements: {
               "cl-footerAction": {
