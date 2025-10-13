@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -51,13 +51,7 @@ export default function PropertyDetailPage() {
   const checkIn = watch("check_in");
   const checkOut = watch("check_out");
 
-  useEffect(() => {
-    if (params.id) {
-      fetchProperty();
-    }
-  }, [params.id]);
-
-  const fetchProperty = async () => {
+  const fetchProperty = useCallback(async () => {
     try {
       const res = await fetch(`/api/properties/${params.id}`);
       if (res.ok) {
@@ -72,7 +66,15 @@ export default function PropertyDetailPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [params.id, router]);
+
+  useEffect(() => {
+    if (params.id) {
+      fetchProperty();
+    }
+  }, [params.id, fetchProperty]);
+
+
 
   const calculateTotalPrice = () => {
     if (!property || !checkIn || !checkOut) return 0;

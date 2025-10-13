@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useUser } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
 
@@ -29,20 +29,11 @@ export default function BookingsPage() {
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    if (isLoaded && user) {
-      fetchBookings();
-    }
-  }, [isLoaded, user]);
-
-  if (isLoaded && !user) {
-    router.push("/inicio-de-sesion");
-    return null;
-  }
-
-  const fetchBookings = async () => {
+  const fetchBookings = useCallback(async () => {
+    if (!user) return;
+    
     try {
-      const res = await fetch(`/api/dashboard/bookings?owner_id=${user!.id}`);
+      const res = await fetch(`/api/dashboard/bookings?owner_id=${user.id}`);
       if (res.ok) {
         const data = await res.json();
         setBookings(data.bookings || []);
@@ -52,7 +43,20 @@ export default function BookingsPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [user]);
+
+  useEffect(() => {
+    if (isLoaded && user) {
+      fetchBookings();
+    }
+  }, [isLoaded, user, fetchBookings]);
+
+  if (isLoaded && !user) {
+    router.push("/inicio-de-sesion");
+    return null;
+  }
+
+
 
   const updateBookingStatus = async (bookingId: string, newStatus: string) => {
     try {
@@ -65,7 +69,7 @@ export default function BookingsPage() {
       if (res.ok) {
         setBookings(bookings.map(booking => 
           booking.id === bookingId 
-            ? { ...booking, status: newStatus as any }
+            ? { ...booking, status: newStatus as 'pending' | 'confirmed' | 'cancelled' | 'completed' }
             : booking
         ));
         alert("Estado de reserva actualizado");
