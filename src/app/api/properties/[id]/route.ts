@@ -8,13 +8,14 @@ const supabase = createClient(
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const resolvedParams = await params;
     const { data: property, error } = await supabase
       .from("properties")
       .select("*")
-      .eq("id", params.id)
+      .eq("id", resolvedParams.id)
       .eq("status", "published")
       .single();
 
