@@ -25,7 +25,12 @@ export default function NewPropertyPage() {
       title: "",
       description: "",
       price: 0,
-      location: ""
+      location: "",
+      max_guests: 1,
+      bedrooms: 1,
+      bathrooms: 1,
+      property_type: "house" as const,
+      amenities: []
     },
   });
 
@@ -110,6 +115,94 @@ export default function NewPropertyPage() {
               placeholder="Ej: Cancún, México"
             />
             {errors.location && <p className="text-red-600 text-sm">{errors.location.message}</p>}
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-stone-700">Máximo de huéspedes</label>
+              <input 
+                type="number" 
+                min="1"
+                max="20"
+                className="mt-1 block w-full border border-stone-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-stone-500" 
+                {...register('max_guests', { valueAsNumber: true })} 
+                placeholder="4"
+              />
+              {errors.max_guests && <p className="text-red-600 text-sm">{errors.max_guests.message}</p>}
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-stone-700">Habitaciones</label>
+              <input 
+                type="number" 
+                min="1"
+                className="mt-1 block w-full border border-stone-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-stone-500" 
+                {...register('bedrooms', { valueAsNumber: true })} 
+                placeholder="2"
+              />
+              {errors.bedrooms && <p className="text-red-600 text-sm">{errors.bedrooms.message}</p>}
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-stone-700">Baños</label>
+              <input 
+                type="number" 
+                min="1"
+                className="mt-1 block w-full border border-stone-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-stone-500" 
+                {...register('bathrooms', { valueAsNumber: true })} 
+                placeholder="1"
+              />
+              {errors.bathrooms && <p className="text-red-600 text-sm">{errors.bathrooms.message}</p>}
+            </div>
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-stone-700">Tipo de propiedad</label>
+            <select 
+              className="mt-1 block w-full border border-stone-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-stone-500" 
+              {...register('property_type')}
+            >
+              <option value="house">Casa</option>
+              <option value="apartment">Apartamento</option>
+              <option value="cabin">Cabaña</option>
+              <option value="villa">Villa</option>
+              <option value="other">Otro</option>
+            </select>
+            {errors.property_type && <p className="text-red-600 text-sm">{errors.property_type.message}</p>}
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-stone-700 mb-2">Comodidades</label>
+            <Controller
+              name="amenities"
+              control={control}
+              render={({ field }) => (
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
+                  {[
+                    'WiFi', 'Aire acondicionado', 'Calefacción', 'Cocina', 'Lavadora', 
+                    'Secadora', 'TV', 'Piscina', 'Jacuzzi', 'Gimnasio', 'Estacionamiento', 
+                    'Mascotas permitidas'
+                  ].map((amenity) => (
+                    <label key={amenity} className="flex items-center space-x-2">
+                      <input
+                        type="checkbox"
+                        checked={field.value?.includes(amenity) || false}
+                        onChange={(e) => {
+                          const current = field.value || [];
+                          if (e.target.checked) {
+                            field.onChange([...current, amenity]);
+                          } else {
+                            field.onChange(current.filter(a => a !== amenity));
+                          }
+                        }}
+                        className="rounded border-stone-300 text-stone-600 focus:ring-stone-500"
+                      />
+                      <span className="text-sm text-stone-700">{amenity}</span>
+                    </label>
+                  ))}
+                </div>
+              )}
+            />
           </div>
 
           <div>

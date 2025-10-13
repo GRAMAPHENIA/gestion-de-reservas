@@ -13,7 +13,7 @@ export default function Navbar() {
           <Link href="/" className="text-2xl font-semibold text-gray-900">Reservas</Link>
           <div className="hidden md:flex items-center space-x-4">
             <Link href="/" className="text-sm text-gray-600 hover:text-gray-900">Inicio</Link>
-            <Link href="/hoteles" className="text-sm text-gray-600 hover:text-gray-900">Hoteles</Link>
+            <Link href="/propiedades" className="text-sm text-gray-600 hover:text-gray-900">Propiedades</Link>
             <Link href="/reservas" className="text-sm text-gray-600 hover:text-gray-900">Reservas</Link>
             <SignedIn>
               <Link href="/tablero" className="text-sm text-gray-600 hover:text-gray-900">Dashboard</Link>
@@ -53,7 +53,7 @@ export default function Navbar() {
           <div className={`${open ? 'block' : 'hidden'} md:hidden bg-white/95 border-t border-gray-100` }>
         <div className="px-4 pt-4 pb-4 space-y-3">
           <Link href="/" className="block text-gray-700 py-2">Inicio</Link>
-          <Link href="/hoteles" className="block text-gray-700 py-2">Hoteles</Link>
+          <Link href="/propiedades" className="block text-gray-700 py-2">Propiedades</Link>
           <Link href="/reservas" className="block text-gray-700 py-2">Reservas</Link>
           <SignedIn>
             <Link href="/tablero" className="block text-gray-700 py-2">Dashboard</Link>

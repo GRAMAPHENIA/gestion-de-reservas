@@ -86,7 +86,13 @@ export default function DashboardClient() {
             <h1 className="text-4xl font-light text-stone-800 mb-2 mt-10">TABLERO</h1>
             <p className="text-stone-600">Bienvenido, {user.firstName || user.emailAddresses[0]?.emailAddress}</p>
           </div>
-          <div>
+          <div className="flex gap-3">
+            <button
+              className="bg-blue-600 text-white px-6 py-2 rounded font-medium hover:bg-blue-700 transition-colors"
+              onClick={() => router.push('/tablero/dashboard/reservas')}
+            >
+              Ver reservas
+            </button>
             <button
               className="bg-stone-700 text-white px-6 py-2 rounded font-medium hover:bg-stone-800 transition-colors"
               onClick={() => router.push('/tablero/dashboard/nuevo-alojamiento')}
