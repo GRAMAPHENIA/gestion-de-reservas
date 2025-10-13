@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -51,28 +51,28 @@ export default function PropertyDetailPage() {
   const checkIn = watch("check_in");
   const checkOut = watch("check_out");
 
-  const fetchProperty = useCallback(async () => {
-    try {
-      const res = await fetch(`/api/properties/${params.id}`);
-      if (res.ok) {
-        const data = await res.json();
-        setProperty(data);
-      } else {
-        router.push("/propiedades");
-      }
-    } catch (error) {
-      console.error("Error fetching property:", error);
-      router.push("/propiedades");
-    } finally {
-      setLoading(false);
-    }
-  }, [params.id, router]);
-
   useEffect(() => {
-    if (params.id) {
-      fetchProperty();
-    }
-  }, [params.id, fetchProperty]);
+    const fetchProperty = async () => {
+      if (!params.id) return;
+      
+      try {
+        const res = await fetch(`/api/properties/${params.id}`);
+        if (res.ok) {
+          const data = await res.json();
+          setProperty(data);
+        } else {
+          router.push("/propiedades");
+        }
+      } catch (error) {
+        console.error("Error fetching property:", error);
+        router.push("/propiedades");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProperty();
+  }, [params.id, router]);
 
 
 

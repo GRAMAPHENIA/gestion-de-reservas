@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect } from "react";
 import { useUser } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
 
@@ -29,27 +29,25 @@ export default function BookingsPage() {
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [loading, setLoading] = useState(true);
 
-  const fetchBookings = useCallback(async () => {
-    if (!user) return;
-    
-    try {
-      const res = await fetch(`/api/dashboard/bookings?owner_id=${user.id}`);
-      if (res.ok) {
-        const data = await res.json();
-        setBookings(data.bookings || []);
-      }
-    } catch (error) {
-      console.error("Error fetching bookings:", error);
-    } finally {
-      setLoading(false);
-    }
-  }, [user]);
-
   useEffect(() => {
-    if (isLoaded && user) {
-      fetchBookings();
-    }
-  }, [isLoaded, user, fetchBookings]);
+    const fetchBookings = async () => {
+      if (!isLoaded || !user) return;
+      
+      try {
+        const res = await fetch(`/api/dashboard/bookings?owner_id=${user.id}`);
+        if (res.ok) {
+          const data = await res.json();
+          setBookings(data.bookings || []);
+        }
+      } catch (error) {
+        console.error("Error fetching bookings:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchBookings();
+  }, [isLoaded, user]);
 
   if (isLoaded && !user) {
     router.push("/inicio-de-sesion");

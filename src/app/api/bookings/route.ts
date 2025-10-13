@@ -39,7 +39,8 @@ export async function POST(request: NextRequest) {
       .select("id")
       .eq("property_id", validatedData.property_id)
       .in("status", ["confirmed", "pending"])
-      .or(`and(check_in.lte.${validatedData.check_out},check_out.gte.${validatedData.check_in})`);
+      .lte("check_in", validatedData.check_out)
+      .gte("check_out", validatedData.check_in);
 
     if (bookingError) {
       console.error("Error checking availability:", bookingError);
