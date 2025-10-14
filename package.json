@@ -8,7 +8,8 @@
     "build:debug": "NODE_OPTIONS='--max-old-space-size=4096' next build",
     "start": "next start",
     "lint": "next lint",
-    "type-check": "tsc --noEmit"
+    "type-check": "tsc --noEmit",
+    "check-env": "node -e \"console.log('SUPABASE_URL:', !!process.env.NEXT_PUBLIC_SUPABASE_URL); console.log('SERVICE_KEY:', !!process.env.SUPABASE_SERVICE_ROLE_KEY);\""
   },
   "dependencies": {
     "@clerk/localizations": "^3.25.7",

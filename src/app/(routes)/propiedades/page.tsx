@@ -4,6 +4,17 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 
+// Hook para verificar si estamos en el cliente
+function useIsClient() {
+  const [isClient, setIsClient] = useState(false);
+  
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+  
+  return isClient;
+}
+
 interface Property {
   id: string;
   title: string;
@@ -21,26 +32,51 @@ interface Property {
 export default function PropertiesPage() {
   const [properties, setProperties] = useState<Property[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [filters, setFilters] = useState({
     guests: 1,
     location: "",
     property_type: "",
   });
   const router = useRouter();
+  const isClient = useIsClient();
 
   useEffect(() => {
-    fetchProperties();
-  }, []);
+    if (isClient) {
+      fetchProperties();
+    }
+  }, [isClient]);
 
   const fetchProperties = async () => {
     try {
       const res = await fetch("/api/properties");
+      console.log("Response status:", res.status);
+      console.log("Response headers:", res.headers.get("content-type"));
+      
       if (res.ok) {
-        const data = await res.json();
-        setProperties(data);
+        const text = await res.text();
+        console.log("Response text:", text.substring(0, 200));
+        
+        try {
+          const data = JSON.parse(text);
+          setProperties(Array.isArray(data) ? data : []);
+        } catch (parseError) {
+          console.error("Error parsing JSON:", parseError);
+          console.error("Response was:", text);
+          setError("Error al procesar la respuesta del servidor");
+          setProperties([]);
+        }
+      } else {
+        console.error("Response not ok:", res.status, res.statusText);
+        const errorText = await res.text();
+        console.error("Error response:", errorText);
+        setError(`Error del servidor: ${res.status}`);
+        setProperties([]);
       }
     } catch (error) {
       console.error("Error fetching properties:", error);
+      setError("Error de conexión");
+      setProperties([]);
     } finally {
       setLoading(false);
     }
@@ -65,10 +101,30 @@ export default function PropertiesPage() {
     return types[type] || type;
   };
 
-  if (loading) {
+  if (!isClient || loading) {
     return (
       <div className="min-h-screen bg-stone-50 flex items-center justify-center">
         <div className="text-stone-600">Cargando propiedades...</div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen bg-stone-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="text-red-600 mb-4">Error: {error}</div>
+          <button 
+            onClick={() => {
+              setError(null);
+              setLoading(true);
+              fetchProperties();
+            }}
+            className="bg-stone-800 text-white px-4 py-2 rounded hover:bg-stone-900"
+          >
+            Reintentar
+          </button>
+        </div>
       </div>
     );
   }
