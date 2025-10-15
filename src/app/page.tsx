@@ -65,7 +65,7 @@ export default function HomePage() {
         console.log('URL base:', window.location.origin);
         
         // Usar la API que filtra solo propiedades publicadas
-        const response = await fetch('/api/dashboard/properties');
+        const response = await fetch('/api/properties');
         
         console.log('Response status:', response.status);
         console.log('Response ok:', response.ok);
