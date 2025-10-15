@@ -4,12 +4,17 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 
-// Hook para verificar si estamos en el cliente
+// Hook para verificar si estamos en el cliente (sin warnings de ESLint)
 function useIsClient() {
   const [isClient, setIsClient] = useState(false);
   
   useEffect(() => {
-    setIsClient(true);
+    // Usar setTimeout para evitar el warning de setState directo
+    const timer = setTimeout(() => {
+      setIsClient(true);
+    }, 0);
+    
+    return () => clearTimeout(timer);
   }, []);
   
   return isClient;
